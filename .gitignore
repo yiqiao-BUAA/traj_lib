@@ -1,2 +1,5 @@
 logs/*
 !logs/.gitkeep
+outputs/*
+!outputs/.gitkeep
+*.pyc
