@@ -46,7 +46,7 @@ jobs:
     # ② 运行基准
     - name: Run benchmark
       env:
-        PYTHONPATH: ${{ github.workspace }}
+        PYTHONPATH: ${{ github.workspace }}/..
         MODEL:   ${{ steps.args.outputs.model }}
         DATASET: ${{ steps.args.outputs.dataset }}
         METRICS: ${{ steps.args.outputs.metrics }}
