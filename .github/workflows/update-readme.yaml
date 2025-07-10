@@ -1,0 +1,38 @@
+name: Update README scores
+
+on:
+  workflow_run:
+    workflows: ["Benchmark CI"]
+    types: [completed]
+
+permissions:
+  contents: write          # 允许推 README
+  pull-requests: read
+
+jobs:
+  update:
+    # 只在 CI 成功且合并到 main 后执行
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with: { ref: main }
+
+    - uses: actions/download-artifact@v4
+      with: { name: bench-result, path: bench-result }
+
+    - name: Merge JSON into README
+      run: |
+        python .github/scripts/update_readme.py bench-result/*.json README.md
+
+    - name: Commit & push
+      run: |
+        git config user.name  github-actions
+        git config user.email github-actions@users.noreply.github.com
+        git add README.md
+        git commit -m "docs: update leaderboard $(date -u +'%Y-%m-%d %H:%M:%S')"
+        git push
