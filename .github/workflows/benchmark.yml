@@ -9,7 +9,7 @@ on:
 jobs:
   parse-and-test:
     if: startsWith(github.event.pull_request.title, '[bench]')
-    runs-on: [self-hosted, benchmark]         # 本地 GPU/CPU runner 标签
+    runs-on: [self-hosted]         # 本地 GPU/CPU runner 标签
     timeout-minutes: 120
 
     steps:
