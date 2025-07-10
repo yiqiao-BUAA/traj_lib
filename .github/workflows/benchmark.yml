@@ -46,11 +46,11 @@ jobs:
     # ② 运行基准
     - name: Run benchmark
       env:
+        PYTHONPATH: ${{ github.workspace }}
         MODEL:   ${{ steps.args.outputs.model }}
         DATASET: ${{ steps.args.outputs.dataset }}
         METRICS: ${{ steps.args.outputs.metrics }}
       run: |
-        cd $GITHUB_WORKSPACE/..
         /home/qiaoyi/.conda/envs/sign_hmm/bin/python -m traj_lib.main \
           --model   "$MODEL" \
           --dataset "$DATASET" \
@@ -91,7 +91,7 @@ jobs:
     - name: Update leaderboard issue
       uses: peter-evans/create-or-update-comment@v4
       with:
-        issue-number: 4
+        issue-number: 3
         edit-mode: replace
         body: |
           <!-- BENCHMARK -->
