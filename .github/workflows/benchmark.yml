@@ -50,6 +50,7 @@ jobs:
         DATASET: ${{ steps.args.outputs.dataset }}
         METRICS: ${{ steps.args.outputs.metrics }}
       run: |
+        cd $GITHUB_WORKSPACE/..
         /home/qiaoyi/.conda/envs/sign_hmm/bin/python -m traj_lib.main \
           --model   "$MODEL" \
           --dataset "$DATASET" \
