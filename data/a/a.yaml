@@ -1,0 +1,8 @@
+dataset: 'a'
+test: 1
+test_dict: {
+    a: 1,
+    b: 2,
+    c: 3
+}
+test_value: ${test_dict.a}
