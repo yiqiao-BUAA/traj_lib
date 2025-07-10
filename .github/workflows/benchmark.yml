@@ -60,7 +60,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: bench-result
-        path: ${{ github.workspace }}/traj_lib/outputs/**/*.json
+        path: ${{ github.workspace }}/outputs/**/*.json
 
     # ④ 生成表格（先回到仓库根）
     - id: table
@@ -70,7 +70,7 @@ jobs:
         python <<'PY' > /tmp/table.txt
         import json, glob, os
         rows, metrics = [], set()
-        for f in glob.glob("traj_lib/outputs/*.json"):
+        for f in glob.glob("outputs/*.json"):
             obj = json.load(open(f))
             rows.append((obj["model"], obj["dataset"], obj["scores"]))
             metrics.update(obj["scores"])
