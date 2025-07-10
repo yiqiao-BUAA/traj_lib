@@ -44,23 +44,10 @@ jobs:
                "$model" "$dataset" "$metrics" >> "$GITHUB_OUTPUT"
 
     # -------- ② 安装 & 运行基准 --------
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-
-    - name: Install root requirements
-      if: hashFiles('requirements.txt') != ''
-      run: pip install -r requirements.txt
-    
-    - name: Install model-specific requirements
+    - name: Activate pre-built conda env
+      shell: bash -l {0}
       run: |
-        MODEL_DIR="traj_lib/model/${{ steps.args.outputs.model }}"
-        REQ_FILE="${MODEL_DIR}/requirements.txt"
-        if [ -f "$REQ_FILE" ]; then
-          echo "📦 Installing deps for $REQ_FILE"
-          pip install -r "$REQ_FILE"
-        fi
+        conda activate sign_hmm
 
     - name: Run benchmark
       env:
