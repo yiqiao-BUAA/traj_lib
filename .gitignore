@@ -1,5 +1,10 @@
-logs/*
+# --- 运行日志、输出 ---
+logs/
 !logs/.gitkeep
-outputs/*
+outputs/
 !outputs/.gitkeep
-*.pyc
+
+# --- Python 编译产物 ---
+__pycache__/
+*.py[cod]
+*.so

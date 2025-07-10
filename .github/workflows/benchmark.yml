@@ -1,0 +1,63 @@
+# .github/workflows/benchmark.yml
+name: Benchmark CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+jobs:
+  parse-and-test:
+    if: startsWith(github.event.pull_request.title, '[bench]')
+    runs-on: [self-hosted]         # 本地 GPU/CPU runner 标签
+    timeout-minutes: 120
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    # -------- ① 解析 PR 标题 → 提供默认值 --------
+    - name: Extract benchmark args
+      id: args
+      shell: bash
+      run: |
+        title="${{ github.event.pull_request.title }}"
+
+        # 默认值
+        model=""
+        dataset="all"
+        metrics="all"
+
+        for kv in $title; do
+          [[ $kv =~ model=(.*)   ]] && model="${BASH_REMATCH[1]}"
+          [[ $kv =~ dataset=(.*) ]] && dataset="${BASH_REMATCH[1]}"
+          [[ $kv =~ metrics=(.*) ]] && metrics="${BASH_REMATCH[1]}"
+        done
+
+        if [[ -z "$model" ]]; then
+          echo >&2 "❌ PR 标题缺少 model=<name>"
+          exit 1
+        fi
+
+        printf "model=%s\ndataset=%s\nmetrics=%s\n" \
+               "$model" "$dataset" "$metrics" >> "$GITHUB_OUTPUT"
+
+    # -------- ② 安装 & 运行基准 --------
+    - name: Run benchmark
+      env:
+        MODEL:   ${{ steps.args.outputs.model }}
+        DATASET: ${{ steps.args.outputs.dataset }}
+        METRICS: ${{ steps.args.outputs.metrics }}
+      run: |
+        cd $GITHUB_WORKSPACE/..
+        /home/qiaoyi/.conda/envs/sign_hmm/bin/python -m traj_lib.main \
+          --model   "$MODEL" \
+          --dataset "$DATASET" \
+          --metrics "$METRICS"
+
+    # -------- ③ 保存结果供后续 workflow_run 使用 --------
+    - uses: actions/upload-artifact@v4
+      with:
+        name: bench-result
+        path: traj_lib/outputs/**/*.json
