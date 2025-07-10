@@ -13,9 +13,7 @@ jobs:
   update:
     # 只在 CI 成功且合并到 main 后执行
     if: >
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.head_branch == 'main'
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
 
     steps:
