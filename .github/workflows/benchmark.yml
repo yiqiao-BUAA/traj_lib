@@ -1,63 +1,54 @@
-# .github/workflows/benchmark.yml
-name: Benchmark CI
+# ② 运行基准
+- name: Run benchmark
+  env:
+    MODEL:   ${{ steps.args.outputs.model }}
+    DATASET: ${{ steps.args.outputs.dataset }}
+    METRICS: ${{ steps.args.outputs.metrics }}
+  run: |
+    cd $GITHUB_WORKSPACE/..
+    /home/qiaoyi/.conda/envs/sign_hmm/bin/python -m traj_lib.main \
+      --model   "$MODEL" \
+      --dataset "$DATASET" \
+      --metrics "$METRICS"
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches: [main]
+# ③ 上传结果（用绝对路径）
+- uses: actions/upload-artifact@v4
+  with:
+    name: bench-result
+    path: ${{ github.workspace }}/traj_lib/outputs/**/*.json
 
-jobs:
-  parse-and-test:
-    if: startsWith(github.event.pull_request.title, '[bench]')
-    runs-on: [self-hosted]         # 本地 GPU/CPU runner 标签
-    timeout-minutes: 120
+# ④ 生成表格（先回到仓库根）
+- id: table
+  shell: bash -e {0}
+  run: |
+    cd $GITHUB_WORKSPACE
+    python <<'PY' > /tmp/table.txt
+    import json, glob, os
+    rows, metrics = [], set()
+    for f in glob.glob("traj_lib/outputs/*.json"):
+        obj = json.load(open(f))
+        rows.append((obj["model"], obj["dataset"], obj["scores"]))
+        metrics.update(obj["scores"])
+    metrics = sorted(metrics)
+    hdr = "| Model | Dataset | " + " | ".join(metrics) + " |"
+    sep = "|-------|---------|" + "|".join(["----"]*len(metrics)) + "|"
+    lines = [hdr, sep]
+    for m, d, s in sorted(rows):
+        cells = [f"{s.get(k, ''):.4f}" if k in s else "" for k in metrics]
+        lines.append(f"| {m} | {d} | " + " | ".join(cells) + " |")
+    print("\n".join(lines))
+    PY
+    echo "table<<EOF" >>"$GITHUB_OUTPUT"
+    cat /tmp/table.txt >>"$GITHUB_OUTPUT"
+    echo "EOF" >>"$GITHUB_OUTPUT"
 
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: recursive
-
-    # -------- ① 解析 PR 标题 → 提供默认值 --------
-    - name: Extract benchmark args
-      id: args
-      shell: bash
-      run: |
-        title="${{ github.event.pull_request.title }}"
-
-        # 默认值
-        model=""
-        dataset="all"
-        metrics="all"
-
-        for kv in $title; do
-          [[ $kv =~ model=(.*)   ]] && model="${BASH_REMATCH[1]}"
-          [[ $kv =~ dataset=(.*) ]] && dataset="${BASH_REMATCH[1]}"
-          [[ $kv =~ metrics=(.*) ]] && metrics="${BASH_REMATCH[1]}"
-        done
-
-        if [[ -z "$model" ]]; then
-          echo >&2 "❌ PR 标题缺少 model=<name>"
-          exit 1
-        fi
-
-        printf "model=%s\ndataset=%s\nmetrics=%s\n" \
-               "$model" "$dataset" "$metrics" >> "$GITHUB_OUTPUT"
-
-    # -------- ② 安装 & 运行基准 --------
-    - name: Run benchmark
-      env:
-        MODEL:   ${{ steps.args.outputs.model }}
-        DATASET: ${{ steps.args.outputs.dataset }}
-        METRICS: ${{ steps.args.outputs.metrics }}
-      run: |
-        cd $GITHUB_WORKSPACE/..
-        /home/qiaoyi/.conda/envs/sign_hmm/bin/python -m traj_lib.main \
-          --model   "$MODEL" \
-          --dataset "$DATASET" \
-          --metrics "$METRICS"
-
-    # -------- ③ 保存结果供后续 workflow_run 使用 --------
-    - uses: actions/upload-artifact@v4
-      with:
-        name: bench-result
-        path: traj_lib/outputs/**/*.json
+# ⑤ 更新 Issue
+- name: Update leaderboard issue
+  uses: peter-evans/create-or-update-comment@v4
+  with:
+    issue-number: 4
+    edit-mode: replace
+    body: |
+      <!-- BENCHMARK -->
+      ${{ steps.table.outputs.table }}
+      <!-- BENCHMARK -->
