@@ -15,7 +15,7 @@ def _register(category: str, name: str) -> Callable[[object], object]:
     return decorator
 
 
-def register_dataset(name: str):
+def register_dataloader(name: str):
     return _register("dataloader", name)
 
 def register_eval(name: str):
@@ -23,7 +23,7 @@ def register_eval(name: str):
 
 
 @property
-def DATASET_REGISTRY() -> Dict[str, object]:      # noqa: N802
+def DATALOADER_REGISTRY() -> Dict[str, object]:      # noqa: N802
     return _REGISTRY["dataloader"]
 
 @property
