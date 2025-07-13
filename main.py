@@ -60,7 +60,7 @@ def main():
     if not hasattr(model_mod, "train"):
         log.warning("%s does not expose train(), only inference() will be used", mod_path)
 
-    model_args = ConfigResolver(f"traj_lib/model/{args.model}/{args.model}.yaml").parse()
+    model_args = ConfigResolver(f"{Path(__file__).resolve().parent}/model/{args.model}/{args.model}.yaml").parse()
 
     # 逐数据集评测
     for ds in datasets:
