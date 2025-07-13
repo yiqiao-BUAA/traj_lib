@@ -1,11 +1,12 @@
 # traj_lib/main.py
 import argparse, importlib, json, sys
 from pathlib import Path
-from traj_lib.utils.register import DATALOADER_REGISTRY, EVAL_REGISTRY
+from traj_lib.utils.register import DATALOADER_REGISTRY, EVAL_REGISTRY, VIEW_REGISTRY
 from traj_lib.utils.exargs   import ConfigResolver
 from traj_lib.utils.logger   import get_logger
 import traj_lib.utils.dataloader   # 触发注册
 import traj_lib.utils.eval         # 触发注册
+import traj_lib.utils.views        # 触发注册
 
 log = get_logger('traj_lib.main')
 
@@ -59,12 +60,18 @@ def main():
     if not hasattr(model_mod, "train"):
         log.warning("%s does not expose train(), only inference() will be used", mod_path)
 
+    model_args = ConfigResolver(f"traj_lib/model/{args.model}/{args.model}.yaml").parse()
+
     # 逐数据集评测
     for ds in datasets:
         if ds not in DATALOADER_REGISTRY:
             log.error("Dataset '%s' not registered; skip", ds)
             continue
-        dataloader = DATALOADER_REGISTRY[ds]()
+        dataloader = DATALOADER_REGISTRY[ds](
+            model_args=model_args,
+            pre_views=model_mod.pre_views if hasattr(model_mod, "pre_views") else None,
+            post_views=model_mod.post_views if hasattr(model_mod, "post_views") else None
+        )
         cfg = load_cfg(ds, args.cfg)
 
         preds, gts = model_mod.inference(dataloader, **cfg)

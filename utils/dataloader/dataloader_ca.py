@@ -8,6 +8,7 @@ from traj_lib.utils.register import register_dataloader
 from traj_lib.utils.logger import get_logger
 from traj_lib.utils.dataloader.dataloader_base import BaseDataset
 from traj_lib.utils.exargs import ConfigResolver
+from traj_lib.utils.register import VIEW_REGISTRY
 
 logger = get_logger(__name__)
 dataset_name = 'CA'
@@ -34,23 +35,27 @@ def pre_process_func() -> pd.DataFrame:
     return df
 
 class MyDataset(BaseDataset):
-    def __init__(self) -> None:
+    def __init__(self, pre_views=None, post_views=None) -> None:
         super().__init__(
             preprocess_func=pre_process_func,
             sequence_length=args.get("sequence_length", 30),
-            n_jobs=args.get("n_jobs", 1)
+            n_jobs=args.get("n_jobs", 1),
+            pre_views=pre_views,
+            post_views=post_views
         )
 
 @register_dataloader(name=dataset_name)
 class MyDataLoader(DataLoader):
-    def __init__(self) -> None:
+    def __init__(self, model_args=None,pre_views=None, post_views=None) -> None:
+        dataset = MyDataset(pre_views=pre_views, post_views=post_views)
         super().__init__(
-            dataset=MyDataset(),
-            batch_size=args.get("batch_size", 32),
-            collate_fn=default_collate
+            dataset=dataset,
+            batch_size=model_args.get("batch_size", 32),
+            collate_fn=default_collate,
         )
+        self.view_value = dataset.view_value
         logger.info("DataLoader initialized with dataset: %s", dataset_name)
         logger.info("Batch size: %d, Total Batches: %d",
-                    args.get("batch_size", 32), len(self.dataset) // args.get("batch_size", 32))
+                    model_args.get("batch_size", 32), len(self.dataset) // model_args.get("batch_size", 32))
         logger.info("Sequence length: %d", args.get("sequence_length", 30))
         logger.info("Number of jobs for preprocessing: %d", args.get("n_jobs", 1))

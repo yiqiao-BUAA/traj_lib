@@ -21,6 +21,9 @@ def register_dataloader(name: str):
 def register_eval(name: str):
     return _register("eval", name)
 
+def register_view(name: str):
+    return _register("view", name)
+
 
 @property
 def DATALOADER_REGISTRY() -> Dict[str, object]:      # noqa: N802
@@ -30,5 +33,10 @@ def DATALOADER_REGISTRY() -> Dict[str, object]:      # noqa: N802
 def EVAL_REGISTRY() -> Dict[str, object]:         # noqa: N802
     return _REGISTRY["eval"]
 
+@property
+def VIEW_REGISTRY() -> Dict[str, object]:         # noqa: N802
+    return _REGISTRY["view"]
+
 DATALOADER_REGISTRY     = _REGISTRY["dataloader"]
 EVAL_REGISTRY           = _REGISTRY["eval"]
+VIEW_REGISTRY           = _REGISTRY["view"]

@@ -5,6 +5,8 @@ import torch
 from traj_lib.utils.logger import get_logger
 log = get_logger(__name__)
 
+pre_views = ['testview1', 'testview2']
+
 def inference(dataloader, **kw):
     preds, gts = [], []
     total_steps = len(dataloader)
