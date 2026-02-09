@@ -1,0 +1,11 @@
+sweep:
+    d_model: [32, 64, 128]
+    n_heads: [2, 4, 8]
+    n_layers: [1, 2, 3]
+    dropout: [0.1, 0.2, 0.3]
+
+    lr: [0.001, 0.005, 0.01]
+
+naming: STAN_LR{lr}_HS{d_model}_NH{n_heads}_NL{n_layers}_DO{dropout}
+
+# python ./auto_run.py inject-run --model STAN --dataset NYC --spec ./model/STAN/auto_run.yaml

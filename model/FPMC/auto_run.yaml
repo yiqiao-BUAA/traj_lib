@@ -1,0 +1,11 @@
+sweep:
+    epochs: [100]
+    patience: [10]
+    lr: [0.01, 0.005, 0.001]
+    weight_decay: [0.00001, 0.000005, 0.000001]
+    n_factor: [32, 64, 128]
+
+
+naming: e{epochs}-p{patience}-lr{lr}-wd{weight_decay}-nf{n_factor}
+
+# python ./auto_run.py inject-run --model FPMC --dataset NYC --spec ./model/FPMC/auto_run.yaml

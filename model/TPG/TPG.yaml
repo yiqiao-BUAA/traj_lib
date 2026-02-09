@@ -1,0 +1,30 @@
+model_name: TPG
+
+device: "cuda:0"
+
+train_batch_size: 64
+test_batch_size: 64
+num_epochs: 500
+
+lr: 0.001
+weight_decay: 0.0001
+lr_step: 2
+lr_decay: 0.1
+schedule_threshold: 0.001
+early_stop_lr: 0.000009
+
+user_dim: 98
+loc_dim: ${user_dim}
+time_dim: ${user_dim}
+reg_dim: ${user_dim}
+nhead_enc: 1
+nlayers: 2
+dropout: 0.7
+length: 9
+use_time_query: true
+use_time_loss: false
+loss_embedding_fusion: multiply
+matching_strategy: divide
+
+val_while_train: True
+patience: 5

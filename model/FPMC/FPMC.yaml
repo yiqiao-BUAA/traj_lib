@@ -1,0 +1,13 @@
+epochs: 100
+
+lr: 0.005
+weight_decay: 0.000001
+
+n_factor: 128
+pad_idx: 0
+
+val_while_train: True
+
+patience: 10
+
+batch_size: 2048

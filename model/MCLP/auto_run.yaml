@@ -1,0 +1,9 @@
+sweep:
+    lr: [0.1, 0.01, 0.001]
+    base_dim: [8, 16, 32]
+    topic_num: [150, 300, 450, 600, 750]
+
+
+naming: MCLP_LR{lr}_BD{base_dim}_TN{topic_num}
+
+# python ./auto_run_pal.py inject-run --model MCLP --dataset NYC --spec ./model/MCLP/auto_run.yaml --parallel 4 --read-window-min 0.5

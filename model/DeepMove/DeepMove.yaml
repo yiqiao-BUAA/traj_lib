@@ -1,0 +1,17 @@
+min_seq_len: 5
+time_interval: 10000
+loc_emb_size: 1024
+uid_emb_size: 64
+tim_emb_size: 32
+hidden_size: 512
+attn_type: 'dot'
+rnn_type: 'LSTM'
+dropout_p: 0.3
+learning_rate: 0.0001
+epochs: 200
+optimizer: 'adam'
+window_size: 72
+neg_num: 50
+batch_size: 128
+val_while_train: true
+patience: 5

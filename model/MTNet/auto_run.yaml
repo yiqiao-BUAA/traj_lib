@@ -1,0 +1,9 @@
+sweep:
+    
+    embed_dropout: [0.3, 0.4, 0.5]
+    model_dropout: [0.5, 0.6, 0.7]
+    K_cluster: [50, 60, 70]
+
+naming: MTNet_embedDrop{embed_dropout}_modelDrop{model_dropout}_K{K_cluster}
+
+# python ./auto_run.py inject-run --model MTNet --dataset NYC --spec ./model/MTNet/auto_run.yaml

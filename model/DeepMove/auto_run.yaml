@@ -1,0 +1,12 @@
+sweep:
+    learning_rate: [0.01, 0.001, 0.0001]
+    dropout_p: [0.1, 0.2, 0.3]
+    hidden_size: [256, 512, 1024]
+    loc_emb_size: [256, 512, 1024]
+    uid_emb_size: [16, 32, 64]
+    tim_emb_size: [16, 32, 64]
+    patience: [5, 10]
+
+naming: e{epochs}-p{patience}-lr{learning_rate}-dp{dropout_p}-hs{hidden_size}-les{loc_emb_size}-ues{uid_emb_size}-tes{tim_emb_size}
+
+# python ./auto_run.py inject-run --model DeepMove --dataset NYC --spec ./model/DeepMove/auto_run.yaml

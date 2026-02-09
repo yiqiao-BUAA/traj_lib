@@ -1,0 +1,26 @@
+val_while_train: True
+seed: 42
+time_units: 48  
+
+poi_embed_dim: 128  
+user_embed_dim: 128  
+
+gcn_dropout: 0.4
+gcn_nhid: [32, 64]  
+
+transformer_nhid: 1024 
+transformer_nlayers: 2
+transformer_nhead: 2 
+transformer_dropout: 0.4
+time_embed_dim: 32  
+cat_embed_dim: 32 
+time_loss_weight: 10 
+node_attn_nhid: 128  
+
+batch: 32  
+epochs: 50  
+lr: 0.0001 
+lr_scheduler_factor: 0.1  
+weight_decay: 0.0001
+
+patience: 5

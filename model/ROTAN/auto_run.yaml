@@ -1,0 +1,11 @@
+sweep:
+    lr: [0.01, 0.001, 0.0001]
+    weight_decay: [0.0001, 0.00005, 0.00001]
+    num_epochs: [50, 100, 150]
+    transformer_dropout: [0.3, 0.4, 0.5]
+    patience: [10]
+
+naming: e{num_epochs}-p{patience}-lr{lr}-wd{weight_decay}-td{transformer_dropout}
+
+
+#python auto_run_pal.py inject-run --no-clean-logs --model ROTAN --dataset brightkite_ca --spec ./model/ROTAN/auto_run.yaml --parallel 4 --read-window-min 0.5

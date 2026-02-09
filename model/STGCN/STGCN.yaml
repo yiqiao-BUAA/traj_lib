@@ -1,0 +1,28 @@
+# ./model/STGCN/STGCN.yaml
+# ================= STGCN with Chebyshev spectral filtering ================
+# Views
+pre_views: []
+post_views: []
+
+# Model Architecture
+# Defines the channel dimensions for the ST-Conv blocks.
+# Input -> Block1 -> Block2 -> Output
+# C_in -> channels[0] -> channels[1] -> channels[2]
+channels: [64, 128, 64]
+cheb_k: 4                  # Order of Chebyshev polynomial for graph convolution.
+time_conv_kernel_size: 7   # Kernel size for the temporal convolutions.
+dropout: 0.4
+
+# Training Strategy
+val_while_train: true
+patience: 10               # Patience for early stopping.
+
+# Optimizer
+epochs: 100
+lr: 0.001
+weight_decay: 0.0001
+
+in_features: 128
+horizon: 1
+Kt: 3
+Ks: 3

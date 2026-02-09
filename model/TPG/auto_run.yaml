@@ -1,0 +1,11 @@
+sweep:
+    lr: [0.01, 0.001, 0.0001]
+    weight_decay: [0.0, 0.0001, 0.001]
+    user_dim: [20, 50, 80, 100]
+    dropout: [0.3, 0.5, 0.7]
+
+naming: lr{lr}_wd{weight_decay}_ud{user_dim}_do{dropout}
+
+
+# python ./auto_run.py inject-run --model TPG --dataset NYC --spec ./model/TPG/auto_run.yaml
+# python auto_run_pal.py inject-run --no-clean-logs --model TPG --dataset Foursquare_ca --spec ./model/TPG/auto_run.yaml --parallel 4 --read-window-min 0.5

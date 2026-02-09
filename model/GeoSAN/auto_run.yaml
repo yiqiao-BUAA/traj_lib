@@ -1,0 +1,11 @@
+sweep:
+    d_model: [32, 50, 64]
+    n_heads: [2, 4]
+    n_layers: [2, 3, 4]
+    dropout: [0.3, 0.5, 0.7]
+    lr: [0.01, 0.001, 0.0001]
+    weight_decay: [0.0001, 0.0005, 0.00005]
+
+naming: GeoSAN_DM{d_model}_NH{n_heads}_NL{n_layers}_DO{dropout}_LR{lr}_WD{weight_decay}
+
+# python ./auto_run.py inject-run --model GETNext --dataset NYC --spec ./model/GETNext/auto_run.yaml

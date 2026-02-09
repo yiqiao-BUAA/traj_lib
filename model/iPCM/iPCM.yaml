@@ -1,0 +1,26 @@
+model_name: iPCM
+
+batch_size: 256
+sequence_length: 80
+num_clusters: 300
+time_feature: time_period
+short_traj_thres: 2
+batch: 100
+poi_embed_dim: 128
+user_embed_dim: 128
+region_embed_dim: 64
+time_embed_dim: 64
+
+num_epochs: 150
+
+lr: 0.0001
+lr_scheduler_factor: 0.1
+weight_decay: 0.0001
+device: "cuda:3"
+transformer_nhead: 2
+transformer_nhid: 1024
+transformer_nlayers: 2
+transformer_dropout: 0.4
+
+val_while_train: True
+patience: 10

@@ -1,0 +1,9 @@
+sweep:
+    lr: [0.001, 0.0001, 0.00001]
+    mask_prop: [0.0, 0.1, 0.2, 0.3]
+    dropout: [0.0, 0.1, 0.2, 0.3]
+
+
+naming: CLSPRec_LR{lr}_MP{mask_prop}_DO{dropout}_TFPLN{tfp_layer_num}_LSTMLN{lstm_layer_num}_HN{head_num}
+
+# python ./auto_run.py inject-run --model CLSPRec --dataset NYC --spec ./model/CLSPRec/auto_run.yaml

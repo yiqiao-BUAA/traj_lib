@@ -1,0 +1,10 @@
+sweep:
+    gcn_dropout: [0.2, 0.3, 0.4]
+    transformer_nlayers: [1, 2, 3]
+    transformer_dropout: [0.2, 0.3, 0.4]
+    lr: [0.01, 0.001, 0.0001]
+    weight_decay: [0.0001, 0.0005, 0.001]
+
+naming: GETNext_GCD{gcn_dropout}_TNH{transformer_nhid}_TNL{transformer_nlayers}_TD{transformer_dropout}_LR{lr}_WD{weight_decay}
+
+# python ./auto_run.py inject-run --model GETNext --dataset NYC --spec ./model/GETNext/auto_run.yaml

@@ -1,0 +1,40 @@
+# traj_lib/model/GeoSAN/GeoSAN.yaml
+# Re-implemented GeoSAN hyper-parameters, aligned with the original paper.
+
+val_while_train: true
+
+# Model size
+d_model: 64
+n_heads: 4
+n_layers: 3
+dropout: 0.3
+
+# --- Original GeoSAN Components ---
+# Geography Encoder (Quadkey-based)
+geo_encoder_n_layers: 2
+quadkey_level: 17
+ngram_size: 6
+
+# Feature Switches
+use_user_emb: false
+use_time_emb: false # Paper maps timestamp to 168 hour-of-week intervals
+use_target_aware_decoder: true
+
+# --- Loss & Negative Sampling ---
+# Loss function temperature for importance sampling
+loss_temperature: 1.0
+# Number of negative samples per positive instance during training
+num_negative_samples: 5
+
+# --- Optimization ---
+lr: 0.001
+weight_decay: 0.0005
+grad_clip: 1.0 # Set to 0 to disable
+epochs: 200
+
+# DataLoader batch sizes (falls back to BaseDataLoader's "batch_size" if unspecified)
+train_batch_size: 128
+val_batch_size: 128
+test_batch_size: 128
+
+patience: 20

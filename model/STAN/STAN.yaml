@@ -1,0 +1,20 @@
+# Configuration for the STAN model, aligned with the original paper.
+val_while_train: true
+patience: 10
+
+# Model Architecture
+d_model: 64         # Embedding dimension
+n_heads: 8          # Number of attention heads
+n_layers: 2         # Number of self-attention aggregation layers
+dropout: 0.3        # Dropout rate
+
+# Training Hyperparameters
+epochs: 50
+lr: 0.001
+weight_decay: 0.0
+grad_clip: 1.0
+batch_size: 64
+sequence_length: 100
+
+# STAN-specific Hyperparameters
+num_negative_samples: 10 # Number of negative samples for the Balanced Sampler
